@@ -1,0 +1,116 @@
+version: "3.8"
+
+services:
+  nginx:
+    container_name: suai-nginx
+    hostname: suai-nginx
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./volumes/etc/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./volumes/etc/nginx/logs/:/logs/
+      - ./volumes/etc/nginx/certs/:/certs/
+    restart: always
+    networks:
+      suai-network:
+        ipv4_address: 10.5.0.5
+  
+  api:
+    container_name: suai-api
+    hostname: suai-api
+    build: ./volumes/build/api/suai-bot-api-gateway
+    volumes:
+      - ./volumes/etc/api/logs:/app/logs/
+    env_file:
+      - ./volumes/etc/api/api.env
+    restart: always
+    networks:
+      suai-network:
+        ipv4_address: 10.5.0.6
+    depends_on:
+      - nginx
+
+  teacher-pg:
+    container_name: suai-teacher-pg
+    hostname: suai-teacher-pg
+    image: postgres:latest
+    volumes:
+      - ./volumes/etc/teacher-service/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - ./volumes/etc/teacher-service/postgres/etc/pg.env
+    # dev
+    ports:
+      - 5431:5432
+    restart: always
+    networks:
+      teacher-network:
+        ipv4_address: 12.5.0.5
+
+  timetable-pg:
+    container_name: suai-timetable-pg
+    hostname: suai-timetable-pg
+    image: postgres:latest
+    volumes:
+      - ./volumes/etc/timetable-service/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - ./volumes/etc/timetable-service/postgres/etc/pg.env
+    # dev
+    ports:
+      - 5430:5432
+    restart: always
+    networks:
+      timetable-network:
+        ipv4_address: 13.5.0.5
+
+  mongo-bot:
+    container_name: suai-bot-mongo
+    hostname: suai-bot-mongo
+    image: mongo:latest
+    volumes:
+      - ./volumes/etc/bot/mongo/data/db:/data/db
+      - ./volumes/etc/bot/mongo/data/config:/data/configdb
+    env_file:
+      - ./volumes/etc/bot/mongo/etc/mongo.env
+    # dev
+    ports:
+      - 27016:27017
+    restart: always
+    networks:
+      bot-network:
+        ipv4_address: 11.5.0.5
+
+
+  # teacher:
+  #   build: ./build/teacher-service/  
+  # timetable:
+  #   build: ./build/timetable-service/
+  # bot:
+  #   build: ./build/teacher-service
+networks:
+  bot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 11.5.0.0/16
+
+  teacher-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 12.5.0.0/16
+          gateway: 12.5.0.1
+
+  timetable-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 13.5.0.0/16
+
+  suai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1

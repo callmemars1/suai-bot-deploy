@@ -1,0 +1,3 @@
+[submodule "volumes/build/api/suai-bot-api-gateway"]
+	path = volumes/build/api/suai-bot-api-gateway
+	url = https://github.com/callmemars1/suai-bot-api-gateway.git
