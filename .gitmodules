@@ -1,3 +1,18 @@
 [submodule "volumes/build/api/suai-bot-api-gateway"]
 	path = volumes/build/api/suai-bot-api-gateway
 	url = https://github.com/callmemars1/suai-bot-api-gateway.git
+[submodule "volumes/build/teacher-service/suai-bot-teacher-info-service"]
+	path = volumes/build/teacher-service/suai-bot-teacher-info-service
+	url = https://github.com/callmemars1/suai-bot-teacher-info-service
+[submodule "volumes/build/bot/telegram-bot"]
+	path = volumes/build/bot/telegram-bot
+	url = https://github.com/callmemars1/suai-bot-student-telegram-client.git
+[submodule "volumes/build/timetable-service/service"]
+	path = volumes/build/timetable-service/service
+	url = https://github.com/callmemars1/suai-bot-timetable-service.git
+[submodule "volumes/build/timetable-parser/parser"]
+	path = volumes/build/timetable-parser/parser
+	url = https://github.com/callmemars1/suai-timetable-parser.git
+[submodule "volumes/build/teacher-info-parser/parser"]
+	path = volumes/build/teacher-info-parser/parser
+	url = https://github.com/callmemars1/suai-teacher-info-parser.git

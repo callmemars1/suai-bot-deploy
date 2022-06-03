@@ -2,3 +2,6 @@
 /volumes/build/api/obj
 /volumes/build/api/bin
 /volumes/build/api/test
+
+**/obj
+**/bin

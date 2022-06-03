@@ -48,17 +48,18 @@ services:
       teacher-network:
         ipv4_address: 12.5.0.5
 
-  timetable-pg:
-    container_name: suai-timetable-pg
-    hostname: suai-timetable-pg
-    image: postgres:latest
+  timetable-mongo:
+    container_name: suai-timetable-mongo
+    hostname: suai-timetable-mongo
+    image: mongo:latest
     volumes:
-      - ./volumes/etc/timetable-service/postgres/data:/var/lib/postgresql/data
+      - ./volumes/etc/timetable-service/mongo/data/db:/data/db
+      - ./volumes/etc/timetable-service/mongo/data/config:/data/configdb
     env_file:
-      - ./volumes/etc/timetable-service/postgres/etc/pg.env
+      - ./volumes/etc/timetable-service/mongo/etc/mongo.env
     # dev
     ports:
-      - 5430:5432
+      - 27015:27017
     restart: always
     networks:
       timetable-network:
@@ -81,9 +82,27 @@ services:
       bot-network:
         ipv4_address: 11.5.0.5
 
+  teacher:
+    container_name: suai-teacher-service
+    hostname: suai-teacher-service
+    build: ./volumes/build/teacher-service/suai-bot-teacher-info-service/suai-teacher-info-service
+    volumes:
+      - ./volumes/etc/teacher-service/service/logs:/teacher-info-service/logs
+    env_file:
+      - ./volumes/etc/teacher-service/service/service.env
+    #dev
+    ports:
+      - 2288:2288
+    restart: always
+    networks:
+      teacher-network:
+        ipv4_address: 12.5.0.6
+      suai-network:
+        ipv4_address: 10.5.0.7
+    depends_on:
+      - teacher-pg
 
-  # teacher:
-  #   build: ./build/teacher-service/  
+
   # timetable:
   #   build: ./build/timetable-service/
   # bot:
